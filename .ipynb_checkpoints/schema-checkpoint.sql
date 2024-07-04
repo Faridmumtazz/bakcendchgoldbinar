@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS normalisasi (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tidak_baku TEXT NOT NULL,
+    baku TEXT NOT NULL
+);
