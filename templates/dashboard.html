@@ -32,32 +32,52 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
             <div class="container-fluid">
                 <div class="d-flex align-items-center w-100" style="justify-content: flex-end;">
-                    <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Company Logo" class="company-logo">
+                    <img src="{{ url_for('static', filename='img/company_logo.png') }}" alt="Company Logo" class="company-logo">
                     <span class="navbar-text ml-2">
-                        Nama PT Anda
+                        PT Bersama Kita Bisa
                     </span>
                 </div>
             </div>
         </nav>
-        <div class="container-fluid h-50 d-flex flex-column justify-content-center align-items-center text-center">
-            <h1 >Selamat Datang di Dashboard</h1>
+        <div class="container-fluid h-100 d-flex flex-column justify-content-center align-items-center text-center custom-container">
+            <h1 class="mb-4" >Selamat Datang di Dashboard</h1>
             <p>Di sini Anda bisa melakukan proses normalisasi teks dan melihat hasilnya.</p>
             <div class="row justify-content-center w-100">
-                <div class="col-lg-4">
+                <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card mb-4 shadow">
                         <div class="card-body">
                             <h5 class="card-title">Proses Input</h5>
                             <p class="card-text">Lakukan proses normalisasi teks di sini.</p>
-                            <a href="/" class="btn btn-primary">Go to Input</a>
+                            <a href="/process_normalisasi" class="btn btn-primary">Go to Input</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card mb-4 shadow">
                         <div class="card-body">
                             <h5 class="card-title">Hasil Normalisasi</h5>
                             <p class="card-text">Lihat hasil normalisasi teks di sini.</p>
                             <a href="/normalisasi_list" class="btn btn-primary">View Results</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center w-100">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">Card Title 3</h5>
+                            <p class="card-text">Some quick example text to build on the card title.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">Card Title 4</h5>
+                            <p class="card-text">Some quick example text to build on the card title.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
                         </div>
                     </div>
                 </div>

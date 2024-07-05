@@ -95,6 +95,10 @@ body {
     border-color: #02434d;
 }
 
+.custom-container {
+    margin-top: -80px; /* Ubah nilai ini sesuai kebutuhan */
+}
+
 .company-logo {
     width: 50px; /* Atur sesuai kebutuhan */
     height: auto;

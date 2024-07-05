@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, send_from_directory, flash
 from flask_session import Session
+from flask_paginate import Pagination, get_page_args
 import pandas as pd
 import sqlite3
 import os
@@ -77,7 +78,7 @@ def dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
     username = session['username']
-    return render_template('dashboard.html', username=username)
+    return render_template('index.html', username=username)
 # Route untuk menampilkan form input
 @app.route('/')
 def index():
@@ -139,24 +140,32 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
-# Route untuk menampilkan hasil normalisasi
 @app.route('/normalisasi_list')
 def normalisasi_list():
     if 'username' not in session:
         return redirect(url_for('login'))
     try:
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
         conn = sqlite3.connect('normalisasi.db')
         c = conn.cursor()
-        c.execute('SELECT * FROM normalisasi')
+        c.execute('SELECT * FROM normalisasi ORDER BY id DESC LIMIT ? OFFSET ?', (per_page, offset))
         rows = c.fetchall()
+        c.execute('SELECT COUNT(*) FROM normalisasi')
+        total = c.fetchone()[0]
         conn.close()
 
         result = []
         for row in rows:
             is_file = row[1].endswith('.txt') or row[1].endswith('.xls') or row[1].endswith('.xlsx')
             result.append({'id': row[0], 'input_text': row[1], 'output_text': row[2], 'is_file': is_file})
-            
-        return render_template('normalisasi_list.html', normalisasi_list=result)
+
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+        return render_template('normalisasi_list.html',
+                               normalisasi_list=result,
+                               page=page,
+                               per_page=per_page,
+                               pagination=pagination)
     except Exception as e:
         print(e)
         return str(e), 500

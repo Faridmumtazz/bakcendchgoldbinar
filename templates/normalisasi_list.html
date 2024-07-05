@@ -4,8 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Normalisasi</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .btn-primary {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-primary:hover {
+            background-color: #02434d;
+            border-color: #02434d;
+        }
+        .pagination a, .pagination li {
+            color: #17a2b8 !important; /* Warna teks default bootstrap primary color */
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #17a2b8 !important; /* Warna latar belakang aktif */
+            border-color: #17a2b8 !important; /* Warna batas aktif */
+            color: white !important; /* Warna teks aktif */
+        }
+
+        .pagination .page-link:hover {
+            background-color: #02434d !important; /* Warna latar belakang saat di-hover */
+            color: white !important; /* Warna teks saat di-hover */
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -35,8 +59,8 @@
 
     <div class="container">
         <h1 class="mt-4">Data Normalisasi</h1>
-        <table class="table table-striped">
-            <thead>
+        <table class="table">
+            <thead class="background-color:#17a2b8">
                 <tr>
                     <th>ID</th>
                     <th>Teks Asli</th>
@@ -59,11 +83,13 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div class="d-flex justify-content-center background-color:#17a2b8 ">
+            {{ pagination.links }}
+        </div>
         <a href="/" class="btn btn-primary">Kembali</a>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>
