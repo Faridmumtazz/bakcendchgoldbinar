@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import pandas as pd
+import sqlite3
 
 app = Flask(__name__)
 
@@ -7,9 +8,22 @@ app = Flask(__name__)
 df_normalisasi = pd.read_csv('new_kamusalay.csv', header=None, names=['tidak_baku', 'baku'], encoding='latin1')
 normalisasi_dict = pd.Series(df_normalisasi['baku'].values, index=df_normalisasi['tidak_baku']).to_dict()
 
-# Tempat untuk menyimpan hasil normalisasi dengan ID
-normalisasi_storage = []
-current_id = 0  # Variabel global untuk menyimpan ID terakhir
+# Inisialisasi database SQLite
+def init_sqlite_db():
+    conn = sqlite3.connect('normalisasi.db')
+    c = conn.cursor()
+    # Buat tabel dengan kolom input_text dan output_text
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS normalisasi (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            input_text TEXT NOT NULL,
+            output_text TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+init_sqlite_db()
 
 # Fungsi normalisasi teks yang akan digunakan untuk endpoint API
 def normalisasi_teks(teks, normalisasi_dict):
@@ -26,17 +40,20 @@ def normalisasi_teks(teks, normalisasi_dict):
 # Membuat endpoint API untuk proses normalisasi teks
 @app.route('/normalisasi', methods=['POST'])
 def normalisasi():
-    global current_id  # Deklarasi bahwa kita ingin menggunakan variabel global current_id
     try:
         data = request.get_json()
         teks = data.get('teks', '')
         teks_normalisasi = normalisasi_teks(teks, normalisasi_dict)
         
-        # Increment ID dan simpan hasil input dan output normalisasi ke storage
-        current_id += 1
-        normalisasi_storage.append({'id': current_id, 'input': teks, 'output': teks_normalisasi})
+        # Simpan hasil input dan output normalisasi ke database
+        conn = sqlite3.connect('normalisasi.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO normalisasi (input_text, output_text) VALUES (?, ?)', (teks, teks_normalisasi))
+        conn.commit()
+        last_id = c.lastrowid
+        conn.close()
 
-        return jsonify({'id': current_id, 'teks_normalisasi': teks_normalisasi})
+        return jsonify({'id': last_id, 'teks_normalisasi': teks_normalisasi})
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
@@ -45,7 +62,17 @@ def normalisasi():
 @app.route('/get_normalisasi', methods=['GET'])
 def get_normalisasi():
     try:
-        return jsonify(normalisasi_storage)
+        conn = sqlite3.connect('normalisasi.db')
+        c = conn.cursor()
+        c.execute('SELECT * FROM normalisasi')
+        rows = c.fetchall()
+        conn.close()
+
+        result = []
+        for row in rows:
+            result.append({'id': row[0], 'input': row[1], 'output': row[2]})
+            
+        return jsonify(result)
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
