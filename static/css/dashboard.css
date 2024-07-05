@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f8f9fa;
+}
+#sidebar-wrapper {
+    min-height: 100vh;
+    background-color: #17a2b8; /* Ganti dengan warna biru */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+#wrapper {
+    position: center;
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#page-content-wrapper {
+    flex: 1;
+    padding: 20px;
+}
+.list-group-flush {
+    flex-grow: 1;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+#page-content-wrapper {
+    flex: 1;
+    padding: 20px;
+}
+
+.list-group-item {
+    border: none;
+    background-color: #17a2b8; /* Ganti dengan warna biru */
+    color: white;
+}
+
+.list-group-item:hover {
+    background-color: #02434d; /* Ganti dengan warna biru lebih gelap pada hover */
+}
+
+.list-group-item-action:active {
+    background-color: #02434d; /* Ganti dengan warna biru lebih gelap saat aktif */
+}
+
+.sidebar-heading {
+    text-align: center;
+    padding: 1.5rem 1.5rem;
+    font-size: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar-heading .profile-image {
+    width: 60px; /* atur ukuran sesuai kebutuhan */
+    height: 60px; /* atur ukuran sesuai kebutuhan */
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #000;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+}
+.container-fluid {
+    position: center;
+}
+.container-fluid h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-primary:hover {
+    background-color: #02434d;
+    border-color: #02434d;
+}
+
+.company-logo {
+    width: 50px; /* Atur sesuai kebutuhan */
+    height: auto;
+    margin-right: 10px; /* Tambahkan jarak jika diperlukan */
+}

@@ -71,11 +71,18 @@ def before_request():
     if 'username' not in session and request.endpoint not in ['login', 'static']:
         return redirect(url_for('login'))
 
+# Route untuk halaman dashboard
+@app.route('/process_normalisasi')
+def dashboard():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    username = session['username']
+    return render_template('dashboard.html', username=username)
 # Route untuk menampilkan form input
 @app.route('/')
 def index():
     if 'username' in session:
-        return render_template('index.html')
+        return render_template('dashboard.html')
     else:
         return redirect(url_for('login'))
 
@@ -109,6 +116,8 @@ def process():
         print(e)
         return str(e), 500
 
+
+
 # Route untuk halaman login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -118,10 +127,10 @@ def login():
         # Abaikan validasi sederhana (hanya contoh)
         if username == 'admin' and password == 'password':
             session['username'] = username
-            return redirect(url_for('index'))
+            return redirect(url_for('dashboard'))
         else:
-            flash('Invalid credentials!', 'danger')
-            return render_template('login.html')
+            flash('Invalid credentials, please try again', 'danger')
+            return render_template('login')
     return render_template('login.html')
 
 # Route untuk login keluar
