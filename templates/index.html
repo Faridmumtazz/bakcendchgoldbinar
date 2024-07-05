@@ -20,19 +20,29 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                {% if session['username'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="/login">Login</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
 
     <div class="container">
         <h1 class="mt-4">Normalisasi Teks</h1>
-        <form action="/process" method="POST" class="mt-4">
+        <form action="/process" method="POST" enctype="multipart/form-data" class="mt-4">
             <div class="form-group">
-                <label for="teks">Masukkan Teks:</label>
+                <label for="teks">Masukkan Teks (atau unggah file):</label>
                 <textarea class="form-control" id="teks" name="teks" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="file">Unggah File (format .txt atau .csv):</label>
+                <input type="file" class="form-control-file" id="file" name="file">
             </div>
             <button type="submit" class="btn btn-primary">Proses</button>
         </form>

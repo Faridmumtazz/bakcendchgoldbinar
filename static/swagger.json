@@ -1,0 +1,106 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "API untuk normalisasi teks",
+      "version": "1.0.0",
+      "title": "Normalisasi Teks API"
+    },
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "normalisasi",
+        "description": "Normalisasi Teks"
+      }
+    ],
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/normalisasi": {
+        "post": {
+          "tags": [
+            "normalisasi"
+          ],
+          "description": "Melakukan normalisasi teks",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Data teks untuk dinormalisasi",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "teks": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "teks_normalisasi": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "internal server error"
+            }
+          }
+        }
+      },
+      "/get_normalisasi": {
+        "get": {
+          "tags": [
+            "normalisasi"
+          ],
+          "description": "Mengambil semua hasil normalisasi",
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "input": {
+                      "type": "string"
+                    },
+                    "output": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "internal server error"
+            }
+          }
+        }
+      }
+    }
+  }
+  

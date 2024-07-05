@@ -20,17 +20,23 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                {% if session['username'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="/login">Login</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
 
     <div class="container">
         <h1 class="mt-4">Hasil Normalisasi</h1>
-        <p><strong>Teks Asli:</strong> {{input_text}}</p>
-        <p><strong>Teks Normalisasi:</strong> {{output_text}}</p>
+        <p><strong>Teks Asli:</strong> {{ input_text }}</p>
+        <p><strong>Teks Normalisasi:</strong> {{ output_text }}</p>
         <a href="/" class="btn btn-primary">Kembali</a>
     </div>
 
