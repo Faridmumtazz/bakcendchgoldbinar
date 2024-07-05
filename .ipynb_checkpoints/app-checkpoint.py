@@ -4,11 +4,12 @@ import pandas as pd
 app = Flask(__name__)
 
 # Kamus normalisasi di-load sekali ketika aplikasi Flask dimulai
-df_normalisasi = pd.read_csv('../new_kamusalay.csv', header=None, names=['tidak_baku', 'baku'], encoding='latin1')
+df_normalisasi = pd.read_csv('new_kamusalay.csv', header=None, names=['tidak_baku', 'baku'], encoding='latin1')
 normalisasi_dict = pd.Series(df_normalisasi['baku'].values, index=df_normalisasi['tidak_baku']).to_dict()
 
-# Tempat untuk menyimpan hasil normalisasi
+# Tempat untuk menyimpan hasil normalisasi dengan ID
 normalisasi_storage = []
+current_id = 0  # Variabel global untuk menyimpan ID terakhir
 
 # Fungsi normalisasi teks yang akan digunakan untuk endpoint API
 def normalisasi_teks(teks, normalisasi_dict):
@@ -25,15 +26,17 @@ def normalisasi_teks(teks, normalisasi_dict):
 # Membuat endpoint API untuk proses normalisasi teks
 @app.route('/normalisasi', methods=['POST'])
 def normalisasi():
+    global current_id  # Deklarasi bahwa kita ingin menggunakan variabel global current_id
     try:
         data = request.get_json()
         teks = data.get('teks', '')
         teks_normalisasi = normalisasi_teks(teks, normalisasi_dict)
         
-        # Simpan hasil input dan output normalisasi ke storage
-        normalisasi_storage.append({'input': teks, 'output': teks_normalisasi})
+        # Increment ID dan simpan hasil input dan output normalisasi ke storage
+        current_id += 1
+        normalisasi_storage.append({'id': current_id, 'input': teks, 'output': teks_normalisasi})
 
-        return jsonify({'teks_normalisasi': teks_normalisasi})
+        return jsonify({'id': current_id, 'teks_normalisasi': teks_normalisasi})
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
