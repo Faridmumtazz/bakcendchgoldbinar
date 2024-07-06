@@ -77,8 +77,8 @@
             </div>
             <div class="list-group list-group-flush">
                 <a href="/" class="list-group-item list-group-item-action text-white"><i class="fas fa-home"></i> Home</a>
-                <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-tasks"></i> Process Input</a>
-                <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-list-alt"></i> Hasil Normalisasi</a>
+                <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-tasks"></i> Cleansing Text</a>
+                <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-list-alt"></i> Cleansed Text</a>
             </div>
             <div>
                 <a href="#" data-toggle="modal" data-target="#logoutModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -106,8 +106,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Teks Asli</th>
-                                <th>Teks Normalisasi</th>
+                                <th>Before Cleansing</th>
+                                <th>After Cleansing</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,20 +131,31 @@
                 <div class="d-flex justify-content-center">
                     {{ pagination.links }}
                 </div>
-                <div class="text-center">
+                <!-- <div class="text-center">
                     <a href="/" class="btn btn-primary mt-3">Kembali</a>
+                </div> -->
+                <!-- Tempatkan grafik di sini -->
+                <div class="mt-4">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-md-6">
+                            <iframe src="{{ url_for('static', filename='revenue_chart.html') }}" width="100%" height="300" style="border:none;"></iframe>
+                        </div>
+                        <div class="col-md-6">
+                            <iframe src="{{ url_for('static', filename='revenue_chart.html') }}" width="100%" height="300" style="border:none;"></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Modals -->
 
-  <!-- Modal Form Normalisasi Teks -->
+<!-- Modal Form Normalisasi Teks -->
 <div class="modal fade" id="normalisasiModal" tabindex="-1" role="dialog" aria-labelledby="normalisasiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="normalisasiModalLabel">Normalisasi Teks</h5>
+                <h5 class="modal-title" id="normalisasiModalLabel">Cleansing Text</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -152,14 +163,14 @@
             <div class="modal-body">
                 <form id="normalisasiForm" action="{{ url_for('process') }}" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="teks">Masukkan Teks (atau unggah file):</label>
+                        <label for="teks">Enter Text (or upload file):</label>
                         <textarea class="form-control" id="teks" name="teks" rows="4"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="file">Unggah File (format .txt atau .csv):</label>
+                        <label for="file">Upload File (format .txt or .csv or .xls or .xlsx):</label>
                         <input type="file" class="form-control-file" id="file" name="file">
                     </div>
-                    <button type="submit" class="btn btn-primary">Proses</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>
@@ -171,7 +182,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="resultModalLabel">Hasil Normalisasi</h5>
+                <h5 class="modal-title" id="resultModalLabel">Cleansed Text</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -191,16 +202,16 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
+                <h5 class="modal-title" id="logoutModalLabel">Confirm to Logout</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Apakah Anda yakin ingin logout?
+                Are you sure you want to logout?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
             </div>
         </div>

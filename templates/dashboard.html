@@ -18,8 +18,8 @@
         </div>
         <div class="list-group list-group-flush">
             <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-home"></i> Home</a>
-            <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-tasks"></i> Process Input</a>
-            <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-list-alt"></i> Hasil Normalisasi</a>
+            <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-tasks"></i> Cleansing Text</a>
+            <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-list-alt"></i> Cleansed Text</a>
            
         </div>
         <div>
@@ -57,23 +57,23 @@
             {% endif %}
          {% endwith %}
         <div class="container-fluid h-100 d-flex flex-column justify-content-center align-items-center text-center custom-container">
-            <h1 class="mb-4" >Selamat Datang di Dashboard</h1>
-            <p>Di sini Anda bisa melakukan proses normalisasi teks dan melihat hasilnya.</p>
+            <h1 class="mb-4" >Welcome to The ETL APP</h1>
+            <p>Here you can perform text normalization and see the results</p>
             <div class="row justify-content-center w-100">
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card mb-4 shadow">
                         <div class="card-body">
-                            <h5 class="card-title">Proses Input</h5>
-                            <p class="card-text">Lakukan proses normalisasi teks di sini.</p>
-                            <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="btn btn-primary">Go to Input</a>
+                            <h5 class="card-title">Cleansing Text</h5>
+                            <p class="card-text">Perform the text normalization process here</p>
+                            <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="btn btn-primary">Go to Cleansing</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card mb-4 shadow">
                         <div class="card-body">
-                            <h5 class="card-title">Hasil Normalisasi</h5>
-                            <p class="card-text">Lihat hasil normalisasi teks di sini.</p>
+                            <h5 class="card-title">Cleansed Text</h5>
+                            <p class="card-text">See the text normalization results here..</p>
                             <a href="/normalisasi_list" class="btn btn-primary">View Results</a>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="normalisasiModalLabel">Normalisasi Teks</h5>
+                <h5 class="modal-title" id="normalisasiModalLabel">Cleansing Text</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -119,14 +119,14 @@
             <div class="modal-body">
                 <form id="normalisasiForm" action="{{ url_for('process') }}" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="teks">Masukkan Teks (atau unggah file):</label>
+                        <label for="teks">Enter Text (or upload file):</label>
                         <textarea class="form-control" id="teks" name="teks" rows="4"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="file">Unggah File (format .txt atau .csv):</label>
+                        <label for="file">Upload File (format .txt or .csv or .xls or .xlsx):</label>
                         <input type="file" class="form-control-file" id="file" name="file">
                     </div>
-                    <button type="submit" class="btn btn-primary">Proses</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>
@@ -138,7 +138,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="resultModalLabel">Hasil Normalisasi</h5>
+                <h5 class="modal-title" id="resultModalLabel">Cleansed Text</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -158,16 +158,16 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
+                <h5 class="modal-title" id="logoutModalLabel">Confirm to Logout</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Apakah Anda yakin ingin logout?
+                Are you sure you want to logout?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
             </div>
         </div>
