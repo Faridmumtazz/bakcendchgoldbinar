@@ -104,3 +104,7 @@ body {
     height: auto;
     margin-right: 10px; /* Tambahkan jarak jika diperlukan */
 }
+
+.modal-dialog-custom {
+    max-width: 600px; /* Sesuaikan lebar modal sesuai kebutuhan */
+}
