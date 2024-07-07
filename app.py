@@ -214,6 +214,11 @@ def get_normalisasi():
         print(e)
         return jsonify({'error': str(e)}), 500
 
+@app.route('/saved_charts')
+def saved_charts():
+    # Route untuk halaman yang menampilkan hasil chart
+    return render_template('saved_chart.html')
+
 # Endpoint API untuk proses normalisasi
 @app.route('/normalisasi', methods=['POST'])
 def normalisasi():
