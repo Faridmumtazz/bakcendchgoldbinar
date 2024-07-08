@@ -12,11 +12,6 @@
     "routes": [
       { "src": "/(.*)", "dest": "app.py" }
     ],
-    "functions": {
-      "app.py": {
-        "runtime": "python3.12"
-      }
-    },
     "env": {
       "FLASK_ENV": "production",
       "SECRET_KEY": "your_secret_key"
