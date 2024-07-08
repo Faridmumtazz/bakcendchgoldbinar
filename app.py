@@ -219,14 +219,11 @@ def saved_charts():
     # Route untuk halaman yang menampilkan hasil chart
     return render_template('saved_chart.html')
 
-<<<<<<< HEAD
 @app.route('/documentation_api')
 def documentation_api():
     # Route untuk halaman yang menampilkan hasil chart
     return render_template('documentation_api.html')
 
-=======
->>>>>>> f997eddf2aeedceea096a4a35823a42a06b43b3e
 # Endpoint API untuk proses normalisasi
 @app.route('/normalisasi', methods=['POST'])
 def normalisasi():
