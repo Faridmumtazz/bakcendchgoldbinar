@@ -104,10 +104,14 @@ body {
 }
 
 .custom-container {
+<<<<<<< HEAD
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+=======
+    margin-top: -80px; /* Ubah nilai ini sesuai kebutuhan */
+>>>>>>> f997eddf2aeedceea096a4a35823a42a06b43b3e
 }
 
 .company-logo {
@@ -118,8 +122,11 @@ body {
 
 .modal-dialog-custom {
     max-width: 600px; /* Sesuaikan lebar modal sesuai kebutuhan */
+<<<<<<< HEAD
 }
 
 #summaryText p {
     margin-bottom: 15px; /* Mengatur jarak antar paragraf */
+=======
+>>>>>>> f997eddf2aeedceea096a4a35823a42a06b43b3e
 }
