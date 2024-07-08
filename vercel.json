@@ -10,7 +10,7 @@
       }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "dashboard.html" }
+      { "src": "/login(.*)", "dest": "dashboard.html" }
     ],
     "env": {
       "FLASK_ENV": "production",
