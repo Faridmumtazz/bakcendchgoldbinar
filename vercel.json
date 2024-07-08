@@ -3,11 +3,23 @@
     "builds": [
       {
         "src": "app.py",
-        "use": "@vercel/python"
+        "use": "@vercel/python",
+        "config": {
+          "zeroConfig": true
+        }
       }
     ],
     "routes": [
       { "src": "/(.*)", "dest": "app.py" }
-    ]
+    ],
+    "functions": {
+      "app.py": {
+        "runtime": "python3.9"
+      }
+    },
+    "env": {
+      "FLASK_ENV": "production",
+      "SECRET_KEY": "your_secret_key"
+    }
   }
   
