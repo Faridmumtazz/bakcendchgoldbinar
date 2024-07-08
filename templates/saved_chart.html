@@ -145,7 +145,11 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="summaryModalLabel">Summary</h5>
+                <h5 class="modal-title" id="summaryModalLabel">
+                    Summary
+                    <span id="loadingSpinner" class="spinner-border spinner-border-sm ml-2" role="status" aria-hidden="true"></span>
+                    <span id="successIcon" class="ml-2" style="display: none;"><i class="fas fa-check-circle" style="color: green;"></i></span>
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -154,6 +158,9 @@
                 <p id="summaryText">
                     <!-- Text ini akan diisi oleh JavaScript -->
                 </p>
+                <div id="summarySuccessAlert" class="alert alert-success mt-3" role="alert" style="display: none;">
+                    Success! Summary has been generated.
+                </div>
             </div>
         </div>
     </div>
@@ -214,11 +221,15 @@
     
         // Handle typing effect for summary
         $('#summaryModal').on('show.bs.modal', function () {
+            $('#loadingSpinner').show();
+            $('#summarySuccessAlert').hide();
+            $('#successIcon').hide();
             var fullText =
             "<p>- Distribusi Hate Speech dan Abusive:<br>" +
             "   Hate Speech: 5.561 tweet<br>" +
             "   Abusive: 5.043 tweet<br>" +
-            "   Abusive lebih banyak muncul dibandingkan dengan Hate Speech.</p><br>" +
+            "   Abusive lebih banyak muncul dibandingkan dengan Hate Speech<br>" +
+            "   Catatan: Jumlah tweet untuk kategori Hate Speech adalah akumulasi dari keseluruhan tweet yang mengandung unsur kebencian tanpa menggandakan sub-kategori.</p><br>" +
 
             "<p>- Distribusi Sub-Kategori Hate Speech:<br>" +
             "   HS-Individual: 3.575 tweet<br>" +
@@ -229,8 +240,8 @@
             "   HS-Others: 3.740 tweet<br>" +
             "   HS-Weak: 3.383 tweet<br>" +
             "   HS-Moderate: 1.705 tweet<br>" +
-            "   HS-Strong: 473 tweet<br>" +
-            "   Kategori 'HS-Individual' dan 'HS-Others' memiliki jumlah tweet terbanyak.</p><br>" +
+            "   Kategori 'HS-Individual' dan 'HS-Others' memiliki jumlah tweet terbanyak.<br>" +
+            "   Catatan: Dalam penghitungan sub-kategori, satu tweet bisa termasuk dalam lebih dari satu sub-kategori, sehingga total jumlah sub-kategori bisa lebih tinggi dari jumlah tweet di kategori utama Hate Speech (HS).</p><br>" +
 
             "<p>- Distribusi Tingkat Hate Speech:<br>" +
             "   HS-Weak: 3.383 tweet<br>" +
@@ -248,7 +259,7 @@
 
         
         var index = 0;
-        var speed = 50; // Kecepatan mengetik (interval dalam ms)
+        var speed = 20; // Kecepatan mengetik (interval dalam ms)
         var element = document.getElementById("summaryText");
 
        
@@ -263,7 +274,13 @@
                 document.getElementById("summaryText").innerHTML += char;
                 index++;
                 setTimeout(typeWriter, speed);
-            }
+            }else {
+            // Sembunyikan spinner setelah pengetikan selesai
+            $('#loadingSpinner').hide();
+            // Tampilkan alert sukses
+            $('#summarySuccessAlert').show();
+            $('#successIcon').show();
+        }
         }
 
         // Kosongkan teks sebelum mengetik ulang
