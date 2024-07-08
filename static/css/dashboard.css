@@ -10,6 +10,12 @@ body {
     color: #fff;
     display: flex;
     flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px; /* Atur lebar sidebar sesuai kebutuhanmu */
+    height: 100vh;/* Atur background-color sesuai kebutuhanmu */
+    overflow-y: auto; 
 }
 #wrapper {
     position: center;
@@ -19,8 +25,10 @@ body {
 }
 
 #page-content-wrapper {
-    flex: 1;
+    /* flex: 1; */
     padding: 20px;
+    margin-left: 200px; /* Sesuaikan dengan lebar sidebar */
+    width: calc(100% - 200px); 
 }
 .list-group-flush {
     flex-grow: 1;
@@ -95,8 +103,23 @@ body {
     border-color: #02434d;
 }
 
+.custom-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .company-logo {
     width: 50px; /* Atur sesuai kebutuhan */
     height: auto;
     margin-right: 10px; /* Tambahkan jarak jika diperlukan */
+}
+
+.modal-dialog-custom {
+    max-width: 600px; /* Sesuaikan lebar modal sesuai kebutuhan */
+}
+
+#summaryText p {
+    margin-bottom: 15px; /* Mengatur jarak antar paragraf */
 }

@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, send_from_directory, flash
 from flask_session import Session
+from flask_paginate import Pagination, get_page_args
 import pandas as pd
 import sqlite3
 import os
@@ -52,18 +53,20 @@ def normalisasi_teks(teks, normalisasi_dict):
 def normalisasi_dari_file(file_path, normalisasi_dict):
     try:
         ext = os.path.splitext(file_path)[1]
+        teks = ''
+
         if ext == '.txt':
             with open(file_path, 'r', encoding="utf-8") as file:
                 teks = file.read()
         elif ext in ['.xls', '.xlsx']:
             df = pd.read_excel(file_path)
-            teks = ' '.join(df.astype(str).values.flatten())
+            teks = ' '.join(df.apply(lambda x: ' '.join(x.astype(str)), axis=1).tolist())
         else:
             return None
         
         return normalisasi_teks(teks, normalisasi_dict)
     except Exception as e:
-        print(e)
+        app.logger.error(e)
         return None
 
 @app.before_request
@@ -82,7 +85,7 @@ def dashboard():
 @app.route('/')
 def index():
     if 'username' in session:
-        return render_template('dashboard.html')
+        return render_template('dashboard.html')  # Pastikan session sudah ada
     else:
         return redirect(url_for('login'))
 
@@ -93,6 +96,13 @@ def process():
         teks = request.form.get('teks', '')
         file = request.files.get('file')
 
+        input_text = ''
+        teks_normalisasi = ''
+
+        # Logging for debugging
+        app.logger.info(f"Received teks: {teks}")
+        app.logger.info(f"Received file: {file.filename if file else 'No file'}")
+
         if file and file.filename != '':
             # Simpan file ke server
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
@@ -102,6 +112,9 @@ def process():
         else:
             teks_normalisasi = normalisasi_teks(teks, normalisasi_dict)
             input_text = teks
+        
+        if teks_normalisasi is None:
+            raise ValueError("Tidak dapat memproses file yang diunggah.")
 
         # Simpan hasil input dan output normalisasi ke database
         conn = sqlite3.connect('normalisasi.db')
@@ -111,10 +124,18 @@ def process():
         last_id = c.lastrowid
         conn.close()
 
-        return render_template('result.html', input_text=input_text, output_text=teks_normalisasi)
+    #     flash('Proses normalisasi berhasil!', 'success')
+    #     return redirect(url_for('dashboard'))
+
+    #     # return render_template('result.html', input_text=input_text, output_text=teks_normalisasi)
+    # except Exception as e:
+    #     flash('Terjadi kesalahan saat memproses normalisasi.', 'danger')
+    #     return str(e), 500
+        return jsonify({'input_text': input_text, 'output_text': teks_normalisasi}), 200
+
     except Exception as e:
-        print(e)
-        return str(e), 500
+        app.logger.error(f"Error during processing: {e}")
+        return jsonify({'error': str(e)}), 500
 
 
 
@@ -127,7 +148,7 @@ def login():
         # Abaikan validasi sederhana (hanya contoh)
         if username == 'admin' and password == 'password':
             session['username'] = username
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('index'))
         else:
             flash('Invalid credentials, please try again', 'danger')
             return render_template('login')
@@ -139,24 +160,32 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
-# Route untuk menampilkan hasil normalisasi
 @app.route('/normalisasi_list')
 def normalisasi_list():
     if 'username' not in session:
         return redirect(url_for('login'))
     try:
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
         conn = sqlite3.connect('normalisasi.db')
         c = conn.cursor()
-        c.execute('SELECT * FROM normalisasi')
+        c.execute('SELECT * FROM normalisasi ORDER BY id DESC LIMIT ? OFFSET ?', (per_page, offset))
         rows = c.fetchall()
+        c.execute('SELECT COUNT(*) FROM normalisasi')
+        total = c.fetchone()[0]
         conn.close()
 
         result = []
         for row in rows:
             is_file = row[1].endswith('.txt') or row[1].endswith('.xls') or row[1].endswith('.xlsx')
             result.append({'id': row[0], 'input_text': row[1], 'output_text': row[2], 'is_file': is_file})
-            
-        return render_template('normalisasi_list.html', normalisasi_list=result)
+
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+        return render_template('normalisasi_list.html',
+                               normalisasi_list=result,
+                               page=page,
+                               per_page=per_page,
+                               pagination=pagination)
     except Exception as e:
         print(e)
         return str(e), 500
@@ -184,6 +213,16 @@ def get_normalisasi():
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
+
+@app.route('/saved_charts')
+def saved_charts():
+    # Route untuk halaman yang menampilkan hasil chart
+    return render_template('saved_chart.html')
+
+@app.route('/documentation_api')
+def documentation_api():
+    # Route untuk halaman yang menampilkan hasil chart
+    return render_template('documentation_api.html')
 
 # Endpoint API untuk proses normalisasi
 @app.route('/normalisasi', methods=['POST'])

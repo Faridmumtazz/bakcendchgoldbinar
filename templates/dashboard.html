@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>ETL APP</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
@@ -17,13 +17,19 @@
             <h5 class="mt-3">Admin</h5> 
         </div>
         <div class="list-group list-group-flush">
-            <a href="/process_normalisasi" class="list-group-item list-group-item-action text-white"><i class="fas fa-tasks"></i> Process Input</a>
-            <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-list-alt"></i> Hasil Normalisasi</a>
+            <a href="/" class="list-group-item list-group-item-action text-white"><i class="fas fa-home"></i> Home</a>
+            <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-tasks"></i> Cleansing Text</a>
+            <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-list-alt"></i> Cleansed Text</a>
+            <a href="/saved_charts" class="list-group-item list-group-item-action text-white"><i class="fas fa-database"></i> Data Analytic</a>
+            <a href="/documentation_api" class="list-group-item list-group-item-action text-white"><i class="fas fa-file-code"></i> Documentation API</a>
            
         </div>
         <div>
-            <a href="/logout" class="list-group-item list-group-item-action text-white"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            <a href="/logout" data-toggle="modal" data-target="#logoutModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
+
+       
+  
     </div>
     <!-- /#sidebar-wrapper -->
 
@@ -32,32 +38,65 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
             <div class="container-fluid">
                 <div class="d-flex align-items-center w-100" style="justify-content: flex-end;">
-                    <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Company Logo" class="company-logo">
+                    <img src="{{ url_for('static', filename='img/company_logo.png') }}" alt="Company Logo" class="company-logo">
                     <span class="navbar-text ml-2">
-                        Nama PT Anda
+                        PT Bersama Kita Bisa
                     </span>
                 </div>
             </div>
         </nav>
-        <div class="container-fluid h-50 d-flex flex-column justify-content-center align-items-center text-center">
-            <h1 >Selamat Datang di Dashboard</h1>
-            <p>Di sini Anda bisa melakukan proses normalisasi teks dan melihat hasilnya.</p>
+
+         <!-- Flash Message Alert -->
+         {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div id="flash-messages" class="container mt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+         {% endwith %}
+        <div class="container-fluid h-100 d-flex flex-column justify-content-center align-items-center text-center custom-container">
+            <h1 class="mb-4" >Welcome to The ETL APP</h1>
+            <p>Here you can perform text normalization and see the results</p>
             <div class="row justify-content-center w-100">
-                <div class="col-lg-4">
+                <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card mb-4 shadow">
                         <div class="card-body">
-                            <h5 class="card-title">Proses Input</h5>
-                            <p class="card-text">Lakukan proses normalisasi teks di sini.</p>
-                            <a href="/" class="btn btn-primary">Go to Input</a>
+                            <h5 class="card-title">Cleansing Text</h5>
+                            <p class="card-text">Perform the text normalization process here</p>
+                            <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="btn btn-primary">Go to Cleansing</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card mb-4 shadow">
                         <div class="card-body">
-                            <h5 class="card-title">Hasil Normalisasi</h5>
-                            <p class="card-text">Lihat hasil normalisasi teks di sini.</p>
+                            <h5 class="card-title">Cleansed Text</h5>
+                            <p class="card-text">See the text normalization results here..</p>
                             <a href="/normalisasi_list" class="btn btn-primary">View Results</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center w-100">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">Data Analytic</h5>
+                            <p class="card-text">See the data analytic here..</p>
+                            <a href="/saved_charts" class="btn btn-primary">View Chart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card mb-4 shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">Documentation API</h5>
+                            <p class="card-text">See the documentation API here..</p>
+                            <a href="/documentation_api" class="btn btn-primary">View Documentation</a>
                         </div>
                     </div>
                 </div>
@@ -66,11 +105,109 @@
     <!-- /#page-content-wrapper -->
 </div>
 <!-- /#wrapper -->
+ 
+
+
+<!-- Modal Form Normalisasi Teks -->
+<div class="modal fade" id="normalisasiModal" tabindex="-1" role="dialog" aria-labelledby="normalisasiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="normalisasiModalLabel">Cleansing Text</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="normalisasiForm" action="{{ url_for('process') }}" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="teks">Enter Text (or upload file):</label>
+                        <textarea class="form-control" id="teks" name="teks" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Upload File (format .txt or .csv or .xls or .xlsx):</label>
+                        <input type="file" class="form-control-file" id="file" name="file">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Menampilkan Hasil Normalisasi -->
+<div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultModalLabel">Cleansed Text</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>Input Teks:</h5>
+                <p id="inputTextResult"></p>
+                <h5>Output Teks:</h5>
+                <p id="outputTextResult"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfirmasi Logout -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Confirm to Logout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to logout?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Bootstrap core JavaScript -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> <!-- Menggunakan versi lengkap jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- Custom Script to Handle Form Submission and Display Result Modal -->
+<script>
+$(document).ready(function() {
+    $('#normalisasiForm').on('submit', function(event) {
+        event.preventDefault(); // Menghentikan submit default
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                // Memasukkan hasil ke modal
+                $('#inputTextResult').text(response.input_text);
+                $('#outputTextResult').text(response.output_text);
+                $('#resultModal').modal('show'); // Menampilkan modal hasil
+            },
+            error: function(error) {
+                console.log("Terjadi kesalahan:", error);
+            }
+        });
+    });
+});
+</script>
 
 <!-- Menu Toggle Script -->
 <script>
