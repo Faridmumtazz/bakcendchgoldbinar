@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETL APP</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
+    <style>
+        body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f8f9fa;
+}
+#sidebar-wrapper {
+    min-height: 100vh;
+    background-color: #17a2b8; /* Ganti dengan warna biru */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px; /* Atur lebar sidebar sesuai kebutuhanmu */
+    height: 100vh;/* Atur background-color sesuai kebutuhanmu */
+    overflow-y: auto; 
+}
+#wrapper {
+    position: center;
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#page-content-wrapper {
+    /* flex: 1; */
+    padding: 20px;
+    margin-left: 200px; /* Sesuaikan dengan lebar sidebar */
+    width: calc(100% - 200px); 
+}
+.list-group-flush {
+    flex-grow: 1;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+#page-content-wrapper {
+    flex: 1;
+    padding: 20px;
+}
+
+.list-group-item {
+    border: none;
+    background-color: #17a2b8; /* Ganti dengan warna biru */
+    color: white;
+}
+
+.list-group-item:hover {
+    background-color: #02434d; /* Ganti dengan warna biru lebih gelap pada hover */
+}
+
+.list-group-item-action:active {
+    background-color: #02434d; /* Ganti dengan warna biru lebih gelap saat aktif */
+}
+
+.sidebar-heading {
+    text-align: center;
+    padding: 1.5rem 1.5rem;
+    font-size: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar-heading .profile-image {
+    width: 60px; /* atur ukuran sesuai kebutuhan */
+    height: 60px; /* atur ukuran sesuai kebutuhan */
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #000;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+}
+.container-fluid {
+    position: center;
+}
+.container-fluid h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-primary:hover {
+    background-color: #02434d;
+    border-color: #02434d;
+}
+
+.custom-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.company-logo {
+    width: 50px; /* Atur sesuai kebutuhan */
+    height: auto;
+    margin-right: 10px; /* Tambahkan jarak jika diperlukan */
+}
+
+.modal-dialog-custom {
+    max-width: 600px; /* Sesuaikan lebar modal sesuai kebutuhan */
+}
+
+#summaryText p {
+    margin-bottom: 15px; /* Mengatur jarak antar paragraf */
+}
+
+.btn-primary {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-primary:hover {
+    background-color: #02434d;
+    border-color: #02434d;
+}
+
+.btn-primary {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-primary:hover {
+            background-color: #02434d;
+            border-color: #02434d;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 600px; /* Adjust height as needed */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box {
+            flex: 1;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .chat-message.user .chat-bubble {
+            background-color: #17a2b8;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+            order: 1;
+        }
+
+        .chat-message.user img {
+            order: 2;
+        }
+
+        .chat-message.bot .chat-bubble {
+            background-color: #e2e3e5;
+            border-bottom-left-radius: 0;
+            order: 2;
+        }
+
+        .chat-message.bot img {
+            order: 1;
+        }
+
+        .chat-message img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin: 0 10px;
+        }
+
+        .chat-bubble {
+            padding: 10px 15px;
+            border-radius: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 70%;
+        }
+
+        .form-control {
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+
+        .send-button {
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+  
+
+    </style>
+</head>
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <div class="sidebar-heading text-white py-4">
+                <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="Profile Image" class="profile-image">
+                <h5 class="mt-3">Admin</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="/" class="list-group-item list-group-item-action text-white"><i class="fas fa-home"></i> Home</a>
+                <a href="/process_normalisasi" data-toggle="modal" data-target="#normalisasiModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-tasks"></i> Cleansing Text</a>
+                <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-list-alt"></i> Cleansed Text</a>
+                <a href="/saved_charts" class="list-group-item list-group-item-action text-white"><i class="fas fa-database"></i> Data Analytic</a>
+                <a href="/documentation_api" class="list-group-item list-group-item-action text-white"><i class="fas fa-file-code"></i> Documentation API</a>
+                <a href="/chat" class="list-group-item list-group-item-action text-white"><i class="fas fa-robot"></i> Generative AI</a>
+            </div>
+            <div>
+                <a href="#" data-toggle="modal" data-target="#logoutModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center w-100" style="justify-content: flex-end;">
+                        <img src="{{ url_for('static', filename='img/company_logo.png') }}" alt="Company Logo" class="company-logo">
+                        <span class="navbar-text ml-2">
+                            PT Bersama Kita Bisa
+                        </span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container mt-5">
+                <h1 class="mb-4">Chat with Generative AI</h1>
+                <div class="chat-container">
+                    <div class="chat-box">
+                        {% for message in chat_history %}
+                          <div class="chat-message {% if message.get('user') %}user{% else %}bot{% endif %}">
+                              <img src="{{ url_for('static', filename='img/' ~ ('profile.jpg' if message.get('user') else 'company_logo.png')) }}" alt="Profile">
+                              <div class="chat-bubble {% if message.get('user') %}user{% else %}bot{% endif %}">
+                                  <p>{{ message.get('user', message['bot']) }}</p>
+                              </div>
+                          </div>
+                        {% endfor %}
+                    </div>
+                    <form method="post">
+                        <div class="form-group">
+                            <textarea class="form-control" id="prompt" name="prompt" rows="3" placeholder="Enter your prompt..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary send-button">Send <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modals -->
+
+    <!-- Modal Form Normalisasi Teks -->
+    <div class="modal fade" id="normalisasiModal" tabindex="-1" role="dialog" aria-labelledby="normalisasiModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="normalisasiModalLabel">Cleansing Text</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="normalisasiForm" action="{{ url_for('process') }}" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="teks">Enter Text (or upload file):</label>
+                            <textarea class="form-control" id="teks" name="teks" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Upload File (format .txt or .csv or .xls or .xlsx):</label>
+                            <input type="file" class="form-control-file" id="file" name="file">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Menampilkan Hasil Normalisasi -->
+    <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Cleansed Text</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5>Input Teks:</h5>
+                    <p id="inputTextResult"></p>
+                    <h5>Output Teks:</h5>
+                    <p id="outputTextResult"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Confirm to Logout</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to logout?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> <!-- Menggunakan versi lengkap jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Custom Script to Handle Form Submission and Display Result Modal -->
+    <script>
+    $(document).ready(function() {
+        $('#normalisasiForm').on('submit', function(event) {
+            event.preventDefault(); // Menghentikan submit default
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // Memasukkan hasil ke modal
+                    $('#inputTextResult').text(response.input_text);
+                    $('#outputTextResult').text(response.output_text);
+                    $('#resultModal').modal('show'); // Menampilkan modal hasil
+                },
+                error: function(error) {
+                    console.log("Terjadi kesalahan:", error);
+                }
+            });
+        });
+    });
+    </script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+</body>
+
+</html>

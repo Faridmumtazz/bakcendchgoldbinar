@@ -1,16 +1,20 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session, send_from_directory, flash
+from flask import Flask, request, render_template, redirect, url_for, session, flash
 from flask_session import Session
 from flask_paginate import Pagination, get_page_args
 import pandas as pd
 import sqlite3
 import os
+import openai  # Tambahkan import untuk OpenAI
 
 app = Flask(__name__)
+
 app.secret_key = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False  # Sesi akan dihapus ketika browser ditutup
 Session(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
+
+openai.api_key = 'sk-proj-B5hBshoJoTYzSTYEeVk0T3BlbkFJnxNb6t7RtKQ0MSaFZ0Zz'  # Tambahkan API Key OpenAI Anda di sini
 
 # Pastikan folder untuk mengunggah file ada
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -81,6 +85,7 @@ def dashboard():
         return redirect(url_for('login'))
     username = session['username']
     return render_template('dashboard.html', username=username)
+
 # Route untuk menampilkan form input
 @app.route('/')
 def index():
@@ -124,20 +129,11 @@ def process():
         last_id = c.lastrowid
         conn.close()
 
-    #     flash('Proses normalisasi berhasil!', 'success')
-    #     return redirect(url_for('dashboard'))
-
-    #     # return render_template('result.html', input_text=input_text, output_text=teks_normalisasi)
-    # except Exception as e:
-    #     flash('Terjadi kesalahan saat memproses normalisasi.', 'danger')
-    #     return str(e), 500
         return jsonify({'input_text': input_text, 'output_text': teks_normalisasi}), 200
 
     except Exception as e:
         app.logger.error(f"Error during processing: {e}")
         return jsonify({'error': str(e)}), 500
-
-
 
 # Route untuk halaman login
 @app.route('/login', methods=['GET', 'POST'])
@@ -216,12 +212,10 @@ def get_normalisasi():
 
 @app.route('/saved_charts')
 def saved_charts():
-    # Route untuk halaman yang menampilkan hasil chart
     return render_template('saved_chart.html')
 
 @app.route('/documentation_api')
 def documentation_api():
-    # Route untuk halaman yang menampilkan hasil chart
     return render_template('documentation_api.html')
 
 # Endpoint API untuk proses normalisasi
@@ -232,7 +226,6 @@ def normalisasi():
         teks = data.get('teks', '')
         teks_normalisasi = normalisasi_teks(teks, normalisasi_dict)
         
-        # Simpan hasil input dan output normalisasi ke database
         conn = sqlite3.connect('normalisasi.db')
         c = conn.cursor()
         c.execute('INSERT INTO normalisasi (input_text, output_text) VALUES (?, ?)', (teks, teks_normalisasi))
@@ -245,12 +238,42 @@ def normalisasi():
         print(e)
         return jsonify({'error': str(e)}), 500
 
+#
+@app.route('/chat', methods=['GET', 'POST'])
+def chat():
+    if 'chat_history' not in session:
+        session['chat_history'] = []
+
+    chat_history = session['chat_history']
+
+    if request.method == 'POST':
+        prompt = request.form['prompt']
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        answer = response['choices'][0]['message']['content'].strip()
+
+        # Menyimpan riwayat chat dalam session
+        chat_history.append({'user': prompt})
+        chat_history.append({'bot': answer})
+        session.modified = True
+
+        return redirect(url_for('chat'))
+
+    return render_template('chat.html', chat_history=chat_history)
+
+
+
 # Swagger UI konfigurasi
 from flask_swagger_ui import get_swaggerui_blueprint
 
 ### Swagger specific ###
 SWAGGER_URL = '/swagger'
-API_URL = '/static/swagger.json'  # Adjust the URL to where your swagger.json is located
+API_URL = '/static/swagger.json' 
 
 swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,
@@ -262,6 +285,5 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
-# Menjalankan aplikasi pada port 5000
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=5000, debug=True)
+    app.run(port=5000, debug=True)

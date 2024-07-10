@@ -22,6 +22,7 @@
             <a href="/normalisasi_list" class="list-group-item list-group-item-action text-white"><i class="fas fa-list-alt"></i> Cleansed Text</a>
             <a href="/saved_charts" class="list-group-item list-group-item-action text-white"><i class="fas fa-database"></i> Data Analytic</a>
             <a href="/documentation_api" class="list-group-item list-group-item-action text-white"><i class="fas fa-file-code"></i> Documentation API</a>
+            <a href="/chat" class="list-group-item list-group-item-action text-white"><i class="fas fa-robot"></i> Generative AI</a>
            
         </div>
         <div>
@@ -145,7 +146,11 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="summaryModalLabel">Summary</h5>
+                <h5 class="modal-title" id="summaryModalLabel">
+                    Summary
+                    <span id="loadingSpinner" class="spinner-border spinner-border-sm ml-2" role="status" aria-hidden="true"></span>
+                    <span id="successIcon" class="ml-2" style="display: none;"><i class="fas fa-check-circle" style="color: green;"></i></span>
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -154,6 +159,9 @@
                 <p id="summaryText">
                     <!-- Text ini akan diisi oleh JavaScript -->
                 </p>
+                <div id="summarySuccessAlert" class="alert alert-success mt-3" role="alert" style="display: none;">
+                    Success! Summary has been generated.
+                </div>
             </div>
         </div>
     </div>
@@ -214,13 +222,22 @@
     
         // Handle typing effect for summary
         $('#summaryModal').on('show.bs.modal', function () {
+
+            $('#loadingSpinner').show();
+
+            $('#summarySuccessAlert').hide();
+
+            $('#successIcon').hide();
+
             var fullText =
-            "<p>- Distribusi Hate Speech dan Abusive:<br>" +
+            "- Distribusi Hate Speech dan Abusive:<br>" +
             "   Hate Speech: 5.561 tweet<br>" +
             "   Abusive: 5.043 tweet<br>" +
-            "   Abusive lebih banyak muncul dibandingkan dengan Hate Speech.</p><br>" +
+            "   Abusive lebih banyak muncul dibandingkan dengan Hate Speech<br>" +
+            "   Catatan: Jumlah tweet untuk kategori Hate Speech adalah akumulasi dari keseluruhan tweet yang mengandung unsur kebencian tanpa menggandakan sub-kategori.</p><br>" +
 
-            "<p>- Distribusi Sub-Kategori Hate Speech:<br>" +
+
+            "- Distribusi Sub-Kategori Hate Speech:<br>" +
             "   HS-Individual: 3.575 tweet<br>" +
             "   HS-Group: 1.986 tweet<br>" +
             "   HS-Religion: 793 tweet<br>" +
@@ -230,7 +247,8 @@
             "   HS-Weak: 3.383 tweet<br>" +
             "   HS-Moderate: 1.705 tweet<br>" +
             "   HS-Strong: 473 tweet<br>" +
-            "   Kategori 'HS-Individual' dan 'HS-Others' memiliki jumlah tweet terbanyak.</p><br>" +
+            "   Kategori 'HS-Individual' dan 'HS-Others' memiliki jumlah tweet terbanyak.<br>" +
+            "   Catatan: Dalam penghitungan sub-kategori, satu tweet bisa termasuk dalam lebih dari satu sub-kategori, sehingga total jumlah sub-kategori bisa lebih tinggi dari jumlah tweet di kategori utama Hate Speech (HS).</p><br>" +
 
             "<p>- Distribusi Tingkat Hate Speech:<br>" +
             "   HS-Weak: 3.383 tweet<br>" +
@@ -248,7 +266,7 @@
 
         
         var index = 0;
-        var speed = 50; // Kecepatan mengetik (interval dalam ms)
+        var speed = 30; // Kecepatan mengetik (interval dalam ms)
         var element = document.getElementById("summaryText");
 
        
@@ -263,7 +281,12 @@
                 document.getElementById("summaryText").innerHTML += char;
                 index++;
                 setTimeout(typeWriter, speed);
-            }
+            } else {
+            // Sembunyikan spinner setelah pengetikan selesai
+            $('#loadingSpinner').hide();
+            $('#successIcon').show();
+            $('#summarySuccessAlert').show();
+        }
         }
 
         // Kosongkan teks sebelum mengetik ulang
