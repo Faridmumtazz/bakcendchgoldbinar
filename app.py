@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, session, flash
+from flask import Flask, request, render_template, redirect, url_for,jsonify, session, flash
 from flask_session import Session
 from flask_paginate import Pagination, get_page_args
 import pandas as pd
@@ -14,7 +14,7 @@ app.config['SESSION_PERMANENT'] = False  # Sesi akan dihapus ketika browser ditu
 Session(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
-openai.api_key = 'sk-proj-B5hBshoJoTYzSTYEeVk0T3BlbkFJnxNb6t7RtKQ0MSaFZ0Zz'  # Tambahkan API Key OpenAI Anda di sini
+openai.api_key = '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'  # Tambahkan API Key OpenAI Anda di sini
 
 # Pastikan folder untuk mengunggah file ada
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -265,6 +265,45 @@ def chat():
         return redirect(url_for('chat'))
 
     return render_template('chat.html', chat_history=chat_history)
+
+@app.route('/upload_file_normalisasi', methods=['POST'])
+def upload_file_normalisasi():
+    try:
+        file = request.files.get('file')
+        if file is None:
+            return jsonify({'error': 'No file part in the request'}), 400
+
+        if file.filename == '':
+            return jsonify({'error': 'No file uploaded'}), 400
+
+        # Simpan file ke server
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        app.logger.info(f"Saving file to: {file_path}")
+        file.save(file_path)
+        
+        app.logger.info("File saved successfully, starting normalization process.")
+        teks_normalisasi = normalisasi_dari_file(file_path, normalisasi_dict)
+        input_text = file.filename  # Simpan nama file sebagai input
+
+        if teks_normalisasi is None:
+            raise ValueError("Tidak dapat memproses file yang diunggah.")
+
+        # Simpan hasil input dan output normalisasi ke database
+        conn = sqlite3.connect('normalisasi.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO normalisasi (input_text, output_text) VALUES (?, ?)', (input_text, teks_normalisasi))
+        conn.commit()
+        last_id = c.lastrowid
+        conn.close()
+
+        app.logger.info("File normalized and saved to database successfully.")
+        return jsonify({'id': last_id, 'input_text': input_text, 'output_text': teks_normalisasi}), 200
+
+    except Exception as e:
+        app.logger.error(f"Error during file upload processing: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
 
 
 
