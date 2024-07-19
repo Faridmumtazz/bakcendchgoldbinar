@@ -23,17 +23,16 @@
             <a href="/saved_charts" class="list-group-item list-group-item-action text-white"><i class="fas fa-database"></i> Data Analytic</a>
             <a href="/documentation_api" class="list-group-item list-group-item-action text-white"><i class="fas fa-file-code"></i> Documentation API</a>
             <a href="/chat" class="list-group-item list-group-item-action text-white"><i class="fas fa-robot"></i> Generative AI</a>
+
            
         </div>
         <div>
             <a href="/logout" data-toggle="modal" data-target="#logoutModal" class="list-group-item list-group-item-action text-white"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
-
        
   
     </div>
     <!-- /#sidebar-wrapper -->
-
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
@@ -47,7 +46,6 @@
                 </div>
             </div>
         </nav>
-
          <!-- Flash Message Alert -->
          {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -80,10 +78,10 @@
                     <iframe src="{{ url_for('static', filename='most_common_abusive_words.html') }}" width="100%" height="500" style="border:none;"></iframe>
                 </div>
                 <div class="col-md-12">
-                    <iframe src="{{ url_for('static', filename='wordcloud_abusive.html') }}" width="100%" height="500" style="border:none;"></iframe>
+                    <iframe src="{{ url_for('static', filename='wordcloud_abusive1.html') }}" width="100%" height="500" style="border:none;"></iframe>
                 </div>
                 <div class="col-md-12">
-                    <iframe src="{{ url_for('static', filename='wordcloud_hs.html') }}" width="100%" height="500" style="border:none;"></iframe>
+                    <iframe src="{{ url_for('static', filename='wordcloud_hs1.html') }}" width="100%" height="500" style="border:none;"></iframe>
                 </div>
             </div>
         </div>
@@ -91,8 +89,6 @@
 </div>
 <!-- /#wrapper -->
  
-
-
 <!-- Modal Form Normalisasi Teks -->
 <div class="modal fade" id="normalisasiModal" tabindex="-1" role="dialog" aria-labelledby="normalisasiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
@@ -119,7 +115,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal Menampilkan Hasil Normalisasi -->
 <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
@@ -139,7 +134,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal untuk Summary -->
 <!-- Modal untuk Summary -->
 <div class="modal fade" id="summaryModal" tabindex="-1" role="dialog" aria-labelledby="summaryModalLabel" aria-hidden="true">
@@ -186,14 +180,11 @@
         </div>
     </div>
 </div>
-
 <!-- Bootstrap core JavaScript -->
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> <!-- Menggunakan versi lengkap jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
 <!-- Custom Script to Handle Form Submission and Display Result Modal -->
-
 <!-- Custom Script to Handle Form Submission and Display Result Modal -->
 <script>
     $(document).ready(function() {
@@ -219,16 +210,20 @@
                 }
             });
         });
-    
+
         // Handle typing effect for summary
         $('#summaryModal').on('show.bs.modal', function () {
+            $('#loadingSpinner').show();
+            $('#summarySuccessAlert').hide();
+            $('#successIcon').hide();
             var fullText =
-            "- Distribusi Hate Speech dan Abusive:<br>" +
+            "<p>- Distribusi Hate Speech dan Abusive:<br>" +
             "   Hate Speech: 5.561 tweet<br>" +
             "   Abusive: 5.043 tweet<br>" +
             "   Abusive lebih banyak muncul dibandingkan dengan Hate Speech.</p><br>" +
+            "   Catatan: Jumlah tweet untuk kategori Hate Speech adalah akumulasi dari keseluruhan tweet yang mengandung unsur kebencian tanpa menggandakan sub-kategori.</p><br>" +
 
-            "- Distribusi Sub-Kategori Hate Speech:<br>" +
+            "<p>- Distribusi Sub-Kategori Hate Speech:<br>" +
             "   HS-Individual: 3.575 tweet<br>" +
             "   HS-Group: 1.986 tweet<br>" +
             "   HS-Religion: 793 tweet<br>" +
@@ -239,27 +234,25 @@
             "   HS-Moderate: 1.705 tweet<br>" +
             "   HS-Strong: 473 tweet<br>" +
             "   Kategori 'HS-Individual' dan 'HS-Others' memiliki jumlah tweet terbanyak.</p><br>" +
+            "   Catatan: Dalam penghitungan sub-kategori, satu tweet bisa termasuk dalam lebih dari satu sub-kategori, sehingga total jumlah sub-kategori bisa lebih tinggi dari jumlah tweet di kategori utama Hate Speech (HS).</p><br>" +
 
             "<p>- Distribusi Tingkat Hate Speech:<br>" +
             "   HS-Weak: 3.383 tweet<br>" +
             "   HS-Moderate: 1.705 tweet<br>" +
             "   HS-Strong: 473 tweet<br>" +
             "   Sebagian besar tweet berada pada tingkat 'HS-Weak'.</p><br>" +
-
             "<p>- Most Common Abusive Words:<br>" +
             "   Kata dengan frekuensi tertinggi: 'USER' dengan jumlah lebih dari 14.000 kejadian.<br>" +
             "   Kata-kata lainnya yang sering muncul termasuk 'Cebong,' 'babi,' 'kampret,' dan 'anjing.'</p><br>" +
-
             "<p>- Word Cloud:<br>" +
             "   Word Cloud untuk Abusive menampilkan kata-kata kasar yang umum digunakan dalam tweet.<br>" +
             "   Word Cloud untuk Hate Speech juga menampilkan kata-kata yang sering muncul dalam konteks ujaran kebencian seperti 'cebong,' 'kafir,' 'anjing,' dll.</p>";
 
-        
+
         var index = 0;
-        var speed = 50; // Kecepatan mengetik (interval dalam ms)
+        var speed = 20; // Kecepatan mengetik (interval dalam ms)
         var element = document.getElementById("summaryText");
 
-       
         function typeWriter() {
             if (index < fullText.length) {
                 let char = fullText.charAt(index);
@@ -271,7 +264,14 @@
                 document.getElementById("summaryText").innerHTML += char;
                 index++;
                 setTimeout(typeWriter, speed);
-            }
+            
+            }else {
+            // Sembunyikan spinner setelah pengetikan selesai
+            $('#loadingSpinner').hide();
+            // Tampilkan alert sukses
+            $('#summarySuccessAlert').show();
+            $('#successIcon').show();
+        }
         }
 
         // Kosongkan teks sebelum mengetik ulang
@@ -280,7 +280,6 @@
     });
     });
     </script>
-
 <!-- Menu Toggle Script -->
 <script>
 $("#menu-toggle").click(function(e) {

@@ -43,14 +43,19 @@ init_sqlite_db()
 
 # Fungsi normalisasi teks yang akan digunakan untuk endpoint API
 def normalisasi_teks(teks, normalisasi_dict):
+    # Mengubah semua huruf menjadi huruf kecil
+    teks = teks.lower()
+    
     words = teks.split()
     normalized_words = []
     for word in words:
+        # Memperbaiki singkatan jika ada dalam kamus normalisasi
         if word in normalisasi_dict:
             normalized_word = normalisasi_dict[word]
         else:
             normalized_word = word
         normalized_words.append(normalized_word)
+    
     return ' '.join(normalized_words)
 
 # Fungsi untuk memproses unggahan file
@@ -70,9 +75,8 @@ def normalisasi_dari_file(file_path, normalisasi_dict):
         
         return normalisasi_teks(teks, normalisasi_dict)
     except Exception as e:
-        app.logger.error(e)
+        print(f"Error: {e}")
         return None
-
 @app.before_request
 def before_request():
     if 'username' not in session and request.endpoint not in ['login', 'static']:
@@ -287,6 +291,8 @@ def upload_file_normalisasi():
 
         if teks_normalisasi is None:
             raise ValueError("Tidak dapat memproses file yang diunggah.")
+        
+        input_text_lowered = normalisasi_teks(input_text, normalisasi_dict)
 
         # Simpan hasil input dan output normalisasi ke database
         conn = sqlite3.connect('normalisasi.db')
