@@ -14,7 +14,7 @@ app.config['SESSION_PERMANENT'] = False  # Sesi akan dihapus ketika browser ditu
 Session(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
-openai.api_key = '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'  # Tambahkan API Key OpenAI Anda di sini
+openai.api_key = ''  # Tambahkan API Key OpenAI Anda di sini
 
 # Pastikan folder untuk mengunggah file ada
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
